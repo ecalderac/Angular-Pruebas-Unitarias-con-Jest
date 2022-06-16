@@ -22,7 +22,7 @@ describe('Cart Component', () => {
                 CartComponent
             ],
             providers: [
-                BookService
+                BookService //en los providers se instancian los servicios que se estan utilizando en el componente a testaear, osea lo que estan en el contructor de ese componente
             ],
             schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA] //agregar para evitar posibles errores en las pruebas
         }).compileComponents();
