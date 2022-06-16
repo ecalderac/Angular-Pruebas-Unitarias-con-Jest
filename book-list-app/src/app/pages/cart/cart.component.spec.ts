@@ -36,11 +36,16 @@ describe('Cart Component', () => {
 
     let component: CartComponent; //para utilizar compoentes
     let fixture: ComponentFixture<CartComponent>; //para utilizar componente
-    let service: BookService
+    let service: BookService;
+
+    //------------------------------------------------------------
+    //NOTAS IMPORTANTES
+    //SE EJECUTA ANTES DE CADA TEST  //beforeEach(()=> {})
+    //SE EJECUTA DESPUES DE CADA TEST  //afterEach(()=> {})
+    //------------------------------------------------------------
 
 
     //beforeEach se ejecuta antes de cada test
-
     beforeEach( () => {
 
         TestBed.configureTestingModule({
@@ -51,12 +56,19 @@ describe('Cart Component', () => {
                 CartComponent
             ],
             providers: [
-                BookService
+                BookService //en los providers se instancian los servicios que se estan utilizando en el componente a testaear, osea lo que estan en el contructor de ese componente
             ],
             schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA] //agregar para evitar posibles errores en las pruebas
         }).compileComponents();
 
     });
+
+
+    // ngOnInit(): void {
+    //     this.listCartBook = this._bookService.getBooksFromCart();
+    //     this.totalPrice = this.getTotalPrice(this.listCartBook);
+    //   }
+
 
     //se puede utilizar mas de un beforeEach
     beforeEach( () => {
@@ -69,13 +81,25 @@ describe('Cart Component', () => {
         //Instanciando Servicio, recordar que siempre debe ir despues de haber instanciado el fixture
         service = fixture.debugElement.injector.get(BookService);
 
+        //test para ngOninit ya que esta llamando unos servicios al iniciar
+        jest.spyOn(service, 'getBooksFromCart').mockImplementation( () => listBook ); //aqui cumpliendo con el test unitario en ngOninit para que devuelva el listado de libros al iniciar
+    });
+
+
+    //se ejecuta despues de cada test
+    afterEach( () => {
+        //realizando los respectivos resets para que se limpie despues de cada prueba
+        fixture.destroy(); // se destruye el fixture para q despues se vuelva a instanciar
+        jest.resetAllMocks(); // setea todos los mocks despues de cada test
     })
 
+
+    //La prueba mas sencilla de realizar para comporbar que existe un componente
     it('Componente creado', () => {
 
         expect(component).toBeTruthy(); //comporbacion simp,e para saber si el componente se ha instanciado correctamente
 
-    })
+    });
 
 
     //Se copia metodo del test a realizar para solo tenerlo de referencia
@@ -171,6 +195,42 @@ describe('Cart Component', () => {
 
         expect(spy1).toHaveBeenCalled(); //comprueba que ha sido llamado correctamente
         expect(spy2).toHaveBeenCalledTimes(1); //comprueba cuantas veces ha tenido que ser llamado, en este caso asumiendo que se llamo solo 1 vez
+
+    });
+
+
+    // public onClearBooks(): void {
+    //     if (this.listCartBook && this.listCartBook.length > 0) {
+    //       this._clearListCartBook();
+    //     } else {
+    //        console.log("No books available");
+    //     }
+    //   }
+    
+    //   private _clearListCartBook() {
+    //     this.listCartBook = [];
+    //     this._bookService.removeBooksFromCart();
+    //   }
+
+    it('_clearListCartBook funciona correctamente', () => {
+
+        const spy1 = jest.spyOn(service, 'removeBooksFromCart').mockImplementation( () => null );
+        const spy2 = jest.spyOn(component as any, '_clearListCartBook'); //En este caso no es necesario mockear, pero si se utiliza un metodo no recomendado anteriormente pero se debe de ocupar si o si para llamar a un metodo privado ya que no hay otra forma
+        component.listCartBook = listBook;
+        component.onClearBooks();
+        expect(component.listCartBook.length).toBe(0); //como ya se llamo a la funcion se deberia haber vaciado el carro, por ende se comprueba comprobando a traves del largo de este para ver si la lista esta vacia
+        expect(spy1).toHaveBeenCalledTimes(1);
+        expect(spy2).toHaveBeenCalledTimes(1);
+
+    });
+
+    it('_clearListCartBook funciona correctamente', () => {
+
+        const spy1 = jest.spyOn(service, 'removeBooksFromCart').mockImplementation( () => null );
+        component.listCartBook = listBook;
+        component["_clearListCartBook"]();
+        expect(component.listCartBook.length).toBe(0);
+        expect(spy1).toHaveBeenCalledTimes(1);
 
     });
 
