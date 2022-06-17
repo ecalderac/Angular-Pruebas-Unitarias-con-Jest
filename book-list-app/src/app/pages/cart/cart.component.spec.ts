@@ -42,6 +42,8 @@ describe('Cart Component', () => {
     //NOTAS IMPORTANTES
     //SE EJECUTA ANTES DE CADA TEST  //beforeEach(()=> {})
     //SE EJECUTA DESPUES DE CADA TEST  //afterEach(()=> {})
+    //SE EJECUTA AL PRINCIPIO DEL TODO Y DESPUES NO SE LLAMA MAS  //beforeAll(()=> {})
+    //SE EJECUTA DESPUES DE QUE HAYAN TERMINADO TODOS LOS TESTS  //afterAll(()=> {})
     //------------------------------------------------------------
 
 
