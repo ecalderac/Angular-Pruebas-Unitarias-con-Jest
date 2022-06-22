@@ -1,5 +1,5 @@
 import { HttpClientTestingModule } from "@angular/common/http/testing";
-import { CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA } from "@angular/core";
+import { CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, Pipe, PipeTransform } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { of } from "rxjs";
 import { Book } from "../../models/book.model";
@@ -41,6 +41,14 @@ const bookServiceMock = {
     getBooks: () => of(listBook)
 }
 
+//creando una clase para implementar test para una pipe
+@Pipe({ name: 'reduceText' })
+class ReducePipeMock implements PipeTransform {
+    transform(): string {
+        return '';
+    }
+}
+
 describe('Home component', () => {
 
     let componet: HomeComponent;
@@ -53,7 +61,8 @@ describe('Home component', () => {
                 HttpClientTestingModule
             ],
             declarations: [
-                HomeComponent
+                HomeComponent,
+                ReducePipeMock
             ],
             providers: [
                 //BookService
