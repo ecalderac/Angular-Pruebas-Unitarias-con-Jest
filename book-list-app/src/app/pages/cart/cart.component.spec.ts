@@ -1,4 +1,4 @@
-import { ComponentFixture, TestBed } from "@angular/core/testing";
+import { ComponentFixture, inject, TestBed } from "@angular/core/testing";
 import { CartComponent } from "./cart.component";
 import { HttpClientTestingModule } from '@angular/common/http/testing'
 import { BookService } from "../../services/book.service";
@@ -58,7 +58,8 @@ describe('Cart Component', () => {
                 CartComponent
             ],
             providers: [
-                BookService //en los providers se instancian los servicios que se estan utilizando en el componente a testaear, osea lo que estan en el contructor de ese componente
+                BookService, //en los providers se instancian los servicios que se estan utilizando en el componente a testaear, osea lo que estan en el contructor de ese componente
+                CartComponent //este componente se instanci aqui debido a que se esta ocupando otra forma de instanciar mas abajo 
             ],
             schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA] //agregar para evitar posibles errores en las pruebas
         }).compileComponents();
@@ -97,11 +98,19 @@ describe('Cart Component', () => {
 
 
     //La prueba mas sencilla de realizar para comporbar que existe un componente
-    it('Componente creado', () => {
+    // it('Componente creado', () => {
 
-        expect(component).toBeTruthy(); //comporbacion simp,e para saber si el componente se ha instanciado correctamente
+    //     expect(component).toBeTruthy(); //comporbacion simple para saber si el componente se ha instanciado correctamente
 
-    });
+    // });
+
+    //otra forma de instanciar componentes
+    it('Componente creado', inject([CartComponent], (component2: CartComponent) => {
+
+        expect(component2).toBeTruthy(); //comporbacion simple para saber si el componente se ha instanciado correctamente
+        //recordar que hacerlo de esta forma debe de estar declarado el caomponente en el provider
+    }));
+
 
 
     //Se copia metodo del test a realizar para solo tenerlo de referencia
